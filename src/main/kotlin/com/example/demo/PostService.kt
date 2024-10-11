@@ -1,13 +1,13 @@
 package com.example.demo
 
 import jakarta.annotation.PostConstruct
-import jakarta.transaction.Transactional
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
+@Transactional(readOnly = true)
 class PostService(private val postRepository: PostRepository) {
-    @Transactional
     fun getPosts(page: Int): List<Post> {
         val pageable = PageRequest.of(page, 5)
         val ret = postRepository.findPage(pageable) {
@@ -16,7 +16,6 @@ class PostService(private val postRepository: PostRepository) {
             ).from(
                 entity(Post::class)
             ).orderBy(
-
                 path(Post::priority).plus(3).desc()
             )
         }
